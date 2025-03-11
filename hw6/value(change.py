@@ -67,9 +67,7 @@ class Value:
         out._backward = _backward
         return out
     
-    # Gradient computation
     def backward(self):
-        # Topological sort
         topo, visited = [], set()
         
         def build_topo(v):
@@ -81,12 +79,10 @@ class Value:
         
         build_topo(self)
         
-        # Backward pass
         self.grad = 1.0
         for v in reversed(topo):
             v._backward()
     
-    # Operator overloading for convenience
     def __neg__(self): return self * -1
     def __sub__(self, other): return self + (-other)
     def __rsub__(self, other): return -self + other
@@ -94,23 +90,3 @@ class Value:
     def __rmul__(self, other): return self * other
     def __truediv__(self, other): return self * (other**-1)
     def __rtruediv__(self, other): return other * (self**-1)
-
-x = Value(2.0)
-y = x.sigmoid()
-print(y)  # 應該顯示 sigmoid(2.0) 的值
-
-z = x.exp()
-print(z)  # 應該顯示 e^2.0 的值
-
-w = x.relu()
-print(w)  # 應該顯示 max(0, 2.0)
-
-# 測試計算圖
-a = Value(3.0)
-b = Value(4.0)
-c = a * b
-d = c.sigmoid()
-d.backward()
-
-print(a.grad)  # 應該顯示 d 相對於 a 的梯度
-print(b.grad)  # 應該顯示 d 相對於 b 的梯度
