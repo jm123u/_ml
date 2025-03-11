@@ -40,7 +40,6 @@ class Value:
         out._backward = _backward
         return out
     
-    # Math operations
     def exp(self):
         x = math.exp(self.data)
         out = Value(x, (self,), 'exp')
